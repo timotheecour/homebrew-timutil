@@ -12,6 +12,8 @@ class Rpclib < Formula
 
   def install
     args = std_cmake_args
+    #IMPROVE
+    args+=%W[-DCMAKE_CXX_FLAGS=-fPIC] unless OS.mac?
     system "cmake", *args
     system "make"
     system "make", "install"
