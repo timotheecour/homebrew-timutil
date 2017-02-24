@@ -3,43 +3,22 @@ require File.expand_path("../Requirements/cuda_requirement", __FILE__)
 class Opencv3 < Formula
   desc "Open source computer vision library, version 3"
   homepage "http://opencv.org/"
-  revision 4
 
   stable do
-    url "https://github.com/opencv/opencv/archive/3.1.0.tar.gz"
-    sha256 "f00b3c4f42acda07d89031a2ebb5ebe390764a133502c03a511f67b78bbd4fbf"
+    url "https://github.com/opencv/opencv/archive/3.2.0.tar.gz"
+    sha256 "b9d62dfffb8130d59d587627703d5f3e6252dce4a94c1955784998da7a39dd35"
 
     resource "contrib" do
-      url "https://github.com/opencv/opencv_contrib/archive/3.1.0.tar.gz"
-      sha256 "ef2084bcd4c3812eb53c21fa81477d800e8ce8075b68d9dedec90fef395156e5"
-    end
-
-    patch do
-      # patch fixing crash after 100s when using capturing device https://github.com/opencv/opencv/issues/5874
-      # can be removed with next release
-      url "https://github.com/opencv/opencv/commit/a2bda999211e8be9fbc5d40038fdfc9399de31fc.diff"
-      sha256 "c1f83ec305337744455c2b09c83624a7a3710cfddef2f398bb4ac20ea16197e2"
-    end
-
-    patch do
-      # patch fixes build error https://github.com/Homebrew/homebrew-science/issues/3147 when not using --without-opencl
-      # can be removed with next release
-      url "https://github.com/opencv/opencv/commit/c7bdbef5042dadfe032dfb5d80f9b90bec830371.diff"
-      sha256 "106785f8478451575026e9bf3033e418d8509ffb93e62722701fa017dc043d91"
-    end
-
-    patch do
-      # patch fixes build error when including example sources
-      # can be removed with next release
-      url "https://github.com/opencv/opencv/commit/cdb9c60dcb65e04e7c0bd6bef9b86841191c785a.diff"
-      sha256 "a14499a8c16545cf1bb206cfe0ed8a65697100dca9b2ae5274516d1213a1a32b"
+      url "https://github.com/opencv/opencv_contrib/archive/3.2.0.tar.gz"
+      sha256 "1e2bb6c9a41c602904cc7df3f8fb8f98363a88ea564f2a087240483426bf8cbe"
     end
   end
 
   bottle do
-    sha256 "a09c8a723c7266f790db768d8a89c50e367071fa4c0015bdf632a94af37194fb" => :el_capitan
-    sha256 "7c089cc50c50aed8a7f53096a61fe538eaec502a8d6e5be6a73f0bfa97c6bc75" => :yosemite
-    sha256 "3492582fc4888a77d132a84444ff4271a4a6d8e49cb274abeb5fa6c0cc95e2df" => :mavericks
+    sha256 "57424663b5b7636bff5bbd99b789bebfe9cf17471fb59badb0fe7bb4938b2eda" => :sierra
+    sha256 "2c561cba408449d9381a1bb355eac0a7e1c7b671e5e20e5ba1b7edd9f44a1941" => :el_capitan
+    sha256 "97abd7941d559771293d9b002c752443413a2cf07c9813985ee7c8639a0d17eb" => :yosemite
+    sha256 "c9d09ffa7108512f9d823ff34c66e629b10af54fd7b8b7d08cf32c9b18a1a4cb" => :x86_64_linux
   end
 
   head do
@@ -53,12 +32,13 @@ class Opencv3 < Formula
   keg_only "opencv3 and opencv install many of the same files."
 
   deprecated_option "without-tests" => "without-test"
+  deprecated_option "32-bit" => "with-32-bit"
 
-  option "32-bit"
   option "with-contrib", 'Build "extra" contributed modules'
   option "with-cuda", "Build with CUDA v7.0+ support"
   option "with-examples", "Install C and python examples (sources)"
   option "with-java", "Build with Java support"
+  option "with-nonfree", "Enable non-free algorithms"
   option "with-opengl", "Build with OpenGL support (must use --with-qt5)"
   option "with-quicktime", "Use QuickTime for Video I/O instead of QTKit"
   option "with-qt5", "Build the Qt5 backend to HighGUI"
@@ -127,13 +107,24 @@ class Opencv3 < Formula
       -DBUILD_JASPER=OFF
       -DBUILD_JPEG=OFF
       -DBUILD_TIFF=OFF
-      -DBUILD_OPENEXR=OFF
       -DBUILD_PNG=OFF
       -DBUILD_ZLIB=OFF
       -DCMAKE_OSX_DEPLOYMENT_TARGET=
       -DJPEG_INCLUDE_DIR=#{jpeg.opt_include}
       -DJPEG_LIBRARY=#{jpeg.opt_lib}/libjpeg.#{dylib}
     ]
+
+    # cf https://github.com/Homebrew/homebrew-science/pull/5185
+    args << "-DBUILD_OPENEXR=" + (OS.linux? ? "ON" : "OFF")
+
+    if OS.linux?
+      # http://answers.opencv.org/question/121651/fata-error-lapacke_h_path-notfound-when-building-opencv-32/
+      args << "-DWITH_LAPACK=OFF"
+
+      # avoid error: '_mm_cvtps_ph' was not declared in this scope; cf https://github.com/RoboSherlock/robosherlock/issues/78#issuecomment-274469830
+      args << "-DOPENCV_EXTRA_CXX_FLAGS='-march=core-avx2'"
+    end
+
     args << "-DBUILD_opencv_java=" + arg_switch("java")
     args << "-DBUILD_opencv_python2=" + arg_switch("python")
     args << "-DBUILD_opencv_python3=" + arg_switch("python3")
@@ -172,6 +163,12 @@ class Opencv3 < Formula
     if build.with? "examples"
       args << "-DINSTALL_C_EXAMPLES=ON"
       args << "-DINSTALL_PYTHON_EXAMPLES=ON"
+    end
+
+    if build.with? "nonfree"
+      resource("contrib").stage buildpath/"opencv_contrib"
+      args << "-DOPENCV_EXTRA_MODULES_PATH=#{buildpath}/opencv_contrib/modules"
+      args << "-DOPENCV_ENABLE_NONFREE=ON"
     end
 
     # OpenCL 1.1 is required, but Snow Leopard and older come with 1.0
