@@ -46,6 +46,7 @@ class OpencvDbg < Formula
     py3_version = Language::Python.major_minor_version "python3"
 
     # http://opencv-users.1802565.n2.nabble.com/how-to-build-a-debug-version-opencv-lib-td5814272.html
+    # http://answers.opencv.org/question/124486/no-rule-to-make-target-tbb_env_lib_debug-notfound-needed-by-liblibopencv_coreso320/
     args = std_cmake_args + %W[
       -DCMAKE_OSX_DEPLOYMENT_TARGET=
       -DBUILD_JASPER=OFF
@@ -68,7 +69,6 @@ class OpencvDbg < Formula
       -DWITH_JASPER=OFF
       -DWITH_OPENEXR=ON
       -DWITH_OPENGL=OFF
-      -DCMAKE_BUILD_TYPE=Debug
       -DWITH_QT=OFF
       -DWITH_TBB=ON
       -DWITH_VTK=OFF
@@ -80,6 +80,8 @@ class OpencvDbg < Formula
       -DPYTHON3_EXECUTABLE=#{which "python3"}
       -DPYTHON3_LIBRARY=#{py3_config}/libpython#{py3_version}.dylib
       -DPYTHON3_INCLUDE_DIR=#{py3_include}
+      -DCMAKE_BUILD_TYPE=Debug
+      -DBUILD_TBB=ON
     ]
 
     if build.bottle?
@@ -90,7 +92,9 @@ class OpencvDbg < Formula
     mkdir "build" do
       system "cmake", "..", *args
       system "make"
-      system "make", "install"
+      # system "make", "install"
+      # system "make", "install", "DESTDIR=$HOME/temp/stage"
+      system "make", "install", "DESTDIR=#{prefix}"
     end
   end
 
