@@ -45,6 +45,7 @@ class OpencvDbg < Formula
     py3_include = `python3 -c "import distutils.sysconfig as s; print(s.get_python_inc())"`.chomp
     py3_version = Language::Python.major_minor_version "python3"
 
+    # http://opencv-users.1802565.n2.nabble.com/how-to-build-a-debug-version-opencv-lib-td5814272.html
     args = std_cmake_args + %W[
       -DCMAKE_OSX_DEPLOYMENT_TARGET=
       -DBUILD_JASPER=OFF
@@ -67,7 +68,6 @@ class OpencvDbg < Formula
       -DWITH_JASPER=OFF
       -DWITH_OPENEXR=ON
       -DWITH_OPENGL=OFF
-      # http://opencv-users.1802565.n2.nabble.com/how-to-build-a-debug-version-opencv-lib-td5814272.html
       -DCMAKE_BUILD_TYPE=Debug
       -DWITH_QT=OFF
       -DWITH_TBB=ON
