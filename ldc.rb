@@ -1,4 +1,4 @@
-class Ldc < Formula
+class Ldc2 < Formula
   desc "Portable D programming language compiler"
   homepage "https://wiki.dlang.org/LDC"
   revision 1
