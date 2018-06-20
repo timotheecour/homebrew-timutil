@@ -16,7 +16,7 @@ class CodesignRequirement < Requirement
   end
 end
 
-class Llvm < Formula
+class LlvmWasm < Formula
   desc "Next-gen compiler infrastructure"
   homepage "https://llvm.org/"
 
