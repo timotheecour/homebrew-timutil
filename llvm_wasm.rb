@@ -241,7 +241,7 @@ class LlvmWasm < Formula
       args << "-DLLVM_BUILD_LLVM_DYLIB=ON"
     end
 
-    if build.with? "with-wasm"
+    if build.with? "wasm"
       args << "-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=WebAssembly"
     end
 
