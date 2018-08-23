@@ -26,7 +26,9 @@ class Ripgrep < Formula
     # system "cargo", "install", "--release ", "--features", "pcre2 simd-accel avx-accel", "--root", prefix
     # system "cargo", "install", "--features", "pcre2 simd-accel avx-accel", "--root", prefix
     # system "cargo", "install", "--features", "pcre2", "--features", "avx-accel", "--root", prefix
-    system "cargo", "install", "--features", "pcre2 avx-accel", "--root", prefix
+
+    # system "cargo", "install", "--features", "pcre2 avx-accel", "--root", prefix
+    system "cargo", "install", "--features", "pcre2", "--root", prefix
 
     # Completion scripts and manpage are generated in the crate's build
     # directory, which includes a fingerprint hash. Try to locate it first
