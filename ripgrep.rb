@@ -21,8 +21,8 @@ class Ripgrep < Formula
 
     # system "cargo", "install", "--root", prefix
     ENV["RUSTFLAGS"] = "-C target-cpu=native"
+    # cargo build --release --features 'pcre2'
     system "cargo", "install", "--release ", "--features", "pcre2 simd-accel avx-accel", "--root", prefix
-    cargo build --release --features 'pcre2'
 
     # Completion scripts and manpage are generated in the crate's build
     # directory, which includes a fingerprint hash. Try to locate it first
