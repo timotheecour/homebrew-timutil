@@ -25,6 +25,7 @@ class Ripgrep < Formula
     # '--release ' which wasn't expected, or isn't valid in this context
     # system "cargo", "install", "--release ", "--features", "pcre2 simd-accel avx-accel", "--root", prefix
     system "cargo", "install", "--features", "pcre2 simd-accel avx-accel", "--root", prefix
+    system "cargo", "install", "--features", "pcre2", "--features", "avx-accel", "--root", prefix
 
     # Completion scripts and manpage are generated in the crate's build
     # directory, which includes a fingerprint hash. Try to locate it first
