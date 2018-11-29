@@ -1,3 +1,4 @@
+# DEPRECATED in favor of latest rg ripgrep 0.10.0
 class Ripgrep < Formula
   desc "Search tool like grep and The Silver Searcher"
   homepage "https://github.com/BurntSushi/ripgrep"
