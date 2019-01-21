@@ -1,4 +1,4 @@
-class Tmux < Formula
+class TmuxTim < Formula
   desc "Terminal multiplexer"
   homepage "https://tmux.github.io/"
   url "https://github.com/tmux/tmux/releases/download/2.8/tmux-2.8.tar.gz"
@@ -21,6 +21,9 @@ class Tmux < Formula
   depends_on "pkg-config" => :build
   depends_on "libevent"
   depends_on "utf8proc" => :optional
+
+  # depends_on "ncurses" => :recommended
+  depends_on "ncurses" => :build
 
   resource "completion" do
     url "https://raw.githubusercontent.com/imomaliev/tmux-bash-completion/homebrew_1.0.0/completions/tmux"
