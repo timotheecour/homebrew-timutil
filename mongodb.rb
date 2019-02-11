@@ -31,8 +31,6 @@ class Mongodb < Formula
         :shallow => false
   end
 
-  needs :cxx11
-
   def install
     ENV.cxx11 if MacOS.version < :mavericks
     ENV.libcxx if build.devel?

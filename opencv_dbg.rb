@@ -23,8 +23,6 @@ class OpencvDbg < Formula
   depends_on "numpy"
   depends_on "tbb"
 
-  needs :cxx11
-
   resource "contrib" do
     url "https://github.com/opencv/opencv_contrib/archive/3.4.0.tar.gz"
     sha256 "699ab3eee7922fbd3e8f98c68e6d16a1d453b20ef364e76172e56466dc9c16cd"
